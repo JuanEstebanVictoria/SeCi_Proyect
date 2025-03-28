@@ -16,16 +16,30 @@ public class Report {
     @Id
     @EqualsAndHashCode.Include
     private String id;
-    private String name;
-    private String description;
-    private LocalDateTime date;
-    @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
-    private GeoJsonPoint location;
+    private String title;
     @DBRef
     private List<CategoryReport> categories;
-    private ObjectId isUser;
+    private String description;
+    @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
+    private GeoJsonPoint location;
+    private List<String> urlsImages;
     private ReportStatus status;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private int ratingsImportant;
+    private ObjectId isUser;
+    private Comment comment;
+
+
+
+
+
+
+
+
+
+
+
 
 
 
