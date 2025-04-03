@@ -1,20 +1,22 @@
 package co.edu.uniquindio.seci_proyect.Model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.bson.types.ObjectId;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
+
 
 public class Comment {
 
+    private ObjectId userId;
+    private ObjectId idReport;
     private String content;
     private LocalDateTime date;
-    private ObjectId idUser;
-    private ObjectId idReport;
+
 }

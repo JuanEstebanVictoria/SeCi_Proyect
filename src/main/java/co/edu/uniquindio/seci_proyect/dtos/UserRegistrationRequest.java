@@ -13,21 +13,21 @@ import java.util.Objects;
 
 
 public record UserRegistrationRequest(
-        @NotBlank(message = "El email es requerido")
-        @Email(message = "Debe ser un email válido")
+        @NotBlank(message = "Email is required")
+        @Email(message = "Must be a valid email")
         String email,
 
-        @NotBlank(message = "El nombre completo es requerido")
-        @Size(min = 2, max = 80, message = "Debe tener entre 2 y 80 caracteres")
+        @NotBlank(message = "Fullname required")
+        @Size(min = 2, max = 80, message = "Must be between 2 and 80 words")
         String fullName,
 
-        @NotBlank(message = "La contraseña es requerida")
+        @NotBlank(message = "Password must be required")
         @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&]).{8,}$",
-                message = "Debe contener al menos: un número, una letra minúscula, una mayúscula y un carácter especial")
+                message = "Must containt al least: one number, one lower case letter, one upper case y un special caracter")
         String password,
 
-        @NotNull(message = "La fecha de nacimiento es requerida")
-        @Past(message = "La fecha debe ser en el pasado")
+        @NotNull(message = "DateBirth required")
+        @Past(message = "DateBirth must be on the past")
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         LocalDate dateBirth,
 

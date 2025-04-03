@@ -2,17 +2,24 @@ package co.edu.uniquindio.seci_proyect.Model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Document("reports")
 public class Report {
 
     @Id
@@ -21,7 +28,7 @@ public class Report {
     @NotBlank
     private String title;
     @DBRef
-    private List<CategoryReport> categories;
+    private List<Category> categories;
     @NotBlank
     private String description;
     @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
@@ -31,9 +38,9 @@ public class Report {
     private ReportStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private int ratingsImportant;
+    private List<Vote> votes;
     private ObjectId isUser;
-    private Comment comment;
+    private List<Comment> comments;
 
 
 

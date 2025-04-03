@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Document("usuarios")
+@Document("usuars")
 public class User {
     @Id
     @EqualsAndHashCode.Include
