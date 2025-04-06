@@ -1,13 +1,15 @@
 package co.edu.uniquindio.seci_proyect.Model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.bson.types.ObjectId;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 
 
 public class Vote {

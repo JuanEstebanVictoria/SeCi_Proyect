@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class Comment {
 
     private ObjectId userId;
-    private ObjectId idReport;
+    private ObjectId reportId;
     private String content;
     private LocalDateTime date;
 

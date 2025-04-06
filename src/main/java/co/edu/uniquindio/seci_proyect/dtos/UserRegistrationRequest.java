@@ -1,5 +1,6 @@
 package co.edu.uniquindio.seci_proyect.dtos;
 
+import co.edu.uniquindio.seci_proyect.Model.Comment;
 import co.edu.uniquindio.seci_proyect.Model.Rol;
 import co.edu.uniquindio.seci_proyect.Model.UserStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -35,7 +36,9 @@ public record UserRegistrationRequest(
 
         UserStatus status,
 
-        GeoJsonPoint location
+        GeoJsonPoint location,
+
+        Comment comment
 ) {
     public UserRegistrationRequest {
         rol = Objects.requireNonNullElse(rol, Rol.USER);
