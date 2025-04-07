@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface CategoryService {
     CategoryResponse save(CategoryRequest category);
-    CategoryResponse updateCategory(String id,CategoryRequest category);
-    List<CategoryResponse> findAllCategories();
-    CategoryResponse findCategoryById(String id);
-    void deleteCategoryById(String id);
+    CategoryResponse update(String id,CategoryRequest category);
+    List<CategoryResponse> findAll();
+    CategoryResponse findById(String id);
+    void deleteById(String id);
 }
