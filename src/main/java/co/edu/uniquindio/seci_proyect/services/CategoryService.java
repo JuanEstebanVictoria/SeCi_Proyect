@@ -1,7 +1,7 @@
 package co.edu.uniquindio.seci_proyect.services;
 
-import co.edu.uniquindio.seci_proyect.dtos.CategoryRequest;
-import co.edu.uniquindio.seci_proyect.dtos.CategoryResponse;
+import co.edu.uniquindio.seci_proyect.dtos.category.CategoryRequest;
+import co.edu.uniquindio.seci_proyect.dtos.category.CategoryResponse;
 
 import java.util.List;
 

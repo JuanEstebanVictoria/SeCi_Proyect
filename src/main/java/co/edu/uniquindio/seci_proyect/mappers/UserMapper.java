@@ -2,8 +2,8 @@ package co.edu.uniquindio.seci_proyect.mappers;
 
 
 import co.edu.uniquindio.seci_proyect.Model.User;
-import co.edu.uniquindio.seci_proyect.dtos.UserRegistrationRequest;
-import co.edu.uniquindio.seci_proyect.dtos.UserResponse;
+import co.edu.uniquindio.seci_proyect.dtos.user.UserRegistrationRequest;
+import co.edu.uniquindio.seci_proyect.dtos.user.UserResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;

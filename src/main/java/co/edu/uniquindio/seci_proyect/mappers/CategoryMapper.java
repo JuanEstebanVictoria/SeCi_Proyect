@@ -1,8 +1,8 @@
 package co.edu.uniquindio.seci_proyect.mappers;
 
 import co.edu.uniquindio.seci_proyect.Model.Category;
-import co.edu.uniquindio.seci_proyect.dtos.CategoryRequest;
-import co.edu.uniquindio.seci_proyect.dtos.CategoryResponse;
+import co.edu.uniquindio.seci_proyect.dtos.category.CategoryRequest;
+import co.edu.uniquindio.seci_proyect.dtos.category.CategoryResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;

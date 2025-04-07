@@ -2,8 +2,8 @@ package co.edu.uniquindio.seci_proyect.services;
 
 import co.edu.uniquindio.seci_proyect.Model.Category;
 import co.edu.uniquindio.seci_proyect.Model.CategoryStatus;
-import co.edu.uniquindio.seci_proyect.dtos.CategoryRequest;
-import co.edu.uniquindio.seci_proyect.dtos.CategoryResponse;
+import co.edu.uniquindio.seci_proyect.dtos.category.CategoryRequest;
+import co.edu.uniquindio.seci_proyect.dtos.category.CategoryResponse;
 import co.edu.uniquindio.seci_proyect.exceptions.ResourceNotFoundException;
 import co.edu.uniquindio.seci_proyect.exceptions.ValueConflictException;
 import co.edu.uniquindio.seci_proyect.mappers.CategoryMapper;

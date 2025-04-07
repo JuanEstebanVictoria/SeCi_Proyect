@@ -1,4 +1,4 @@
-package co.edu.uniquindio.seci_proyect.dtos;
+package co.edu.uniquindio.seci_proyect.dtos.user;
 
 import java.time.LocalDate;
 import java.util.Objects;

@@ -2,7 +2,7 @@ package co.edu.uniquindio.seci_proyect.repositories;
 
 import co.edu.uniquindio.seci_proyect.Model.User;
 import co.edu.uniquindio.seci_proyect.Model.UserStatus;
-import co.edu.uniquindio.seci_proyect.dtos.UserResponse;
+import co.edu.uniquindio.seci_proyect.dtos.user.UserResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;

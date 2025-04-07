@@ -1,6 +1,5 @@
-package co.edu.uniquindio.seci_proyect.dtos;
+package co.edu.uniquindio.seci_proyect.dtos.category;
 
-import co.edu.uniquindio.seci_proyect.Model.CategoryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

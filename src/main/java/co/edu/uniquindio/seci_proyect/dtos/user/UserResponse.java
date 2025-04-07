@@ -1,11 +1,9 @@
-package co.edu.uniquindio.seci_proyect.dtos;
+package co.edu.uniquindio.seci_proyect.dtos.user;
 
 import co.edu.uniquindio.seci_proyect.Model.Rol;
-import co.edu.uniquindio.seci_proyect.Model.UserStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 import java.time.LocalDate;
 
