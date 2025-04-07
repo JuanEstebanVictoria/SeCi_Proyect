@@ -1,6 +1,6 @@
 package co.edu.uniquindio.seci_proyect.exceptions;
 
-import co.edu.uniquindio.seci_proyect.dtos.ErrorResponse;
+import co.edu.uniquindio.seci_proyect.dtos.common.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

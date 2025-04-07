@@ -13,7 +13,7 @@ public interface UserMapper {
     @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
     @Mapping(target = "status", constant = "REGISTERED")
     @Mapping(target = "password" , expression = "java( new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode(userDTO.password()) )")
-    User parseOf(UserRegistrationRequest userDTO);
+    User parseOf(UserRegistrationRequest userRegistrationRequest);
 
     UserResponse toUserResponse(User user);
 }

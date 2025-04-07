@@ -1,4 +1,4 @@
-package co.edu.uniquindio.seci_proyect.services;
+package co.edu.uniquindio.seci_proyect.services.interfaces;
 
 import co.edu.uniquindio.seci_proyect.dtos.user.UserRegistrationRequest;
 import co.edu.uniquindio.seci_proyect.dtos.user.UserResponse;

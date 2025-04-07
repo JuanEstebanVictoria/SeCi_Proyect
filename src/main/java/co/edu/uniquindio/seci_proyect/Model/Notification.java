@@ -28,4 +28,5 @@ public class Notification {
     private LocalDateTime date;
     @NotNull
     private Boolean read;
+    private  String receiverId;
 }

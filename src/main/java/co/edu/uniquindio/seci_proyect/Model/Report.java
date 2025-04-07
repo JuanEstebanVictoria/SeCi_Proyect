@@ -39,21 +39,6 @@ public class Report {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<Vote> votes;
-    private ObjectId isUser;
+    private ObjectId userId;
     private List<Comment> comments;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

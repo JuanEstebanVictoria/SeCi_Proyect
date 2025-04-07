@@ -1,4 +1,4 @@
-package co.edu.uniquindio.seci_proyect.services;
+package co.edu.uniquindio.seci_proyect.services.impl;
 
 import co.edu.uniquindio.seci_proyect.Model.Category;
 import co.edu.uniquindio.seci_proyect.Model.CategoryStatus;
@@ -8,6 +8,7 @@ import co.edu.uniquindio.seci_proyect.exceptions.ResourceNotFoundException;
 import co.edu.uniquindio.seci_proyect.exceptions.ValueConflictException;
 import co.edu.uniquindio.seci_proyect.mappers.CategoryMapper;
 import co.edu.uniquindio.seci_proyect.repositories.CategoryRepository;
+import co.edu.uniquindio.seci_proyect.services.interfaces.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

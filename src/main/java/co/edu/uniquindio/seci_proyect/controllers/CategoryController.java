@@ -1,12 +1,10 @@
 package co.edu.uniquindio.seci_proyect.controllers;
 
-import co.edu.uniquindio.seci_proyect.dtos.CategoryRequest;
-import co.edu.uniquindio.seci_proyect.dtos.CategoryResponse;
-import co.edu.uniquindio.seci_proyect.repositories.CategoryRepository;
-import co.edu.uniquindio.seci_proyect.services.CategoryService;
+import co.edu.uniquindio.seci_proyect.dtos.category.CategoryRequest;
+import co.edu.uniquindio.seci_proyect.dtos.category.CategoryResponse;
+import co.edu.uniquindio.seci_proyect.services.interfaces.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
