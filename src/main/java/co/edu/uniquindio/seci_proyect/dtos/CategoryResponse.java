@@ -1,12 +1,18 @@
 package co.edu.uniquindio.seci_proyect.dtos;
 
-import jakarta.validation.constraints.NotBlank;
+import co.edu.uniquindio.seci_proyect.Model.CategoryStatus;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public record CategoryResponse(
-        @NotBlank
-        String id,
-        @NotBlank
-        String name,
-        String description
-) {
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class CategoryResponse {
+        private String id;
+        private String name;
+        private String description;
+
 }

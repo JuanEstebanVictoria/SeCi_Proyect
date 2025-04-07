@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 public class Notification {
 
     @Id
+    @EqualsAndHashCode.Include
     private String id;
     @NotBlank
     private String message;

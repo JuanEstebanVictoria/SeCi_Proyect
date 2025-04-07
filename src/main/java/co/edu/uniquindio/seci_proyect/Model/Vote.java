@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 
 public class Vote {
-
+    @EqualsAndHashCode.Include
     private String id;
     private ObjectId userId;
     private ObjectId reportId;

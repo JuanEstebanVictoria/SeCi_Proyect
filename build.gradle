@@ -12,6 +12,12 @@ java {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
 
 repositories {
     mavenCentral()
@@ -29,6 +35,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.mapstruct:mapstruct:1.6.3'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
 
 
 
