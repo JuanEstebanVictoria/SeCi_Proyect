@@ -14,6 +14,5 @@ public interface UserService
 
     Optional<UserResponse> getUser(String id);
 
-
     Page<UserResponse> searchUsers(UserSearchRequest request);
 }

@@ -23,22 +23,9 @@ public record ReportRequest(@NotBlank
                             Double latitude,
                             @NotNull
                             Double longitude,
-                            List<String> urlsImages,
-                            ReportStatus status,
-                            LocalDateTime createdAt,
-                            LocalDateTime updatedAt,
-                            List<Vote> votes,
-                            ObjectId userId,
-                            List<Comment> comments
-
-
+                            List<String> urlsImages
                             ) {
     public ReportRequest{
-        status = Objects.requireNonNullElse(status, ReportStatus.PENDING);
-        createdAt = createdAt != null ? createdAt : LocalDateTime.now();
-        updatedAt = updatedAt != null ? updatedAt : LocalDateTime.now();
-        votes = votes != null ? votes : new ArrayList<>();
-        comments = comments != null ? comments : new ArrayList<>();
-
+        urlsImages= urlsImages != null ? urlsImages : new ArrayList<>();
     }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class CategoryServicesImpl implements CategoryService {
+public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;

@@ -4,6 +4,7 @@ import co.edu.uniquindio.seci_proyect.Model.Rol;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 import java.time.LocalDate;
 
@@ -15,14 +16,16 @@ public record UserResponse(
         @Email
         String email,
 
-        @NotBlank(message = "El nombre completo es requerido")
+        @NotBlank(message = "Fullname is required")
 
         String fullName,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         LocalDate dateBirth,
 
-        Rol rol
+        Rol rol,
+
+        GeoJsonPoint location
 ) {
 
 }

@@ -34,9 +34,8 @@ public record UserRegistrationRequest(
 
         UserStatus status,
 
-        GeoJsonPoint location,
+        GeoJsonPoint location
 
-        Comment comment
 ) {
     public UserRegistrationRequest {
         rol = Objects.requireNonNullElse(rol, Rol.USER);
