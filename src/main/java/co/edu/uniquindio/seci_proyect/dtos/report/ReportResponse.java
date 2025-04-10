@@ -24,5 +24,4 @@ public record ReportResponse(
         ObjectId userId,
         List<Comment> comments,
         List<Vote> votes
-
 ) {}
