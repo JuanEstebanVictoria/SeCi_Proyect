@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/comments")
+@RequestMapping("/comments")
 @RequiredArgsConstructor
 public class CommentController {
 
@@ -25,7 +25,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body((CommentResponse) commentService.addComment(reportId, request));
     }
-    @GetMapping
+    @GetMapping("/{reportId}")
     public ResponseEntity<List<CommentResponse>> getAllComments(
             @RequestParam(required = false) String idReport) {
         return ResponseEntity.ok(commentService.getAllComments(idReport));
