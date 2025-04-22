@@ -6,6 +6,8 @@ import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -19,7 +21,11 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Document("reports")
+@Document(collection = "reports")
+@CompoundIndexes({
+        @CompoundIndex(name = "status_createdAt_idx", def = "{'status': 1, 'createdAt': -1}"),
+        @CompoundIndex(name = "user_status_idx", def = "{'userId': 1, 'status': 1}")
+})
 public class Report {
 
     @Id

@@ -26,7 +26,6 @@ public class ReportController {
 
     @PostMapping
     public ResponseEntity<ReportResponse> createReport(@Valid @RequestBody ReportRequest  report) {
-
         var response = reportService.createReport(report);
         URI location= ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -34,8 +33,8 @@ public class ReportController {
                 .buildAndExpand(response.id())
                 .toUri();
         return ResponseEntity.created(location).body(response);
-
     }
+
 
 
 }

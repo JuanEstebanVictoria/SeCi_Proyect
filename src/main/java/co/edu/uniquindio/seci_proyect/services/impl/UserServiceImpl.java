@@ -1,11 +1,10 @@
 package co.edu.uniquindio.seci_proyect.services.impl;
 
-import co.edu.uniquindio.seci_proyect.dtos.user.UserRegistrationRequest;
-import co.edu.uniquindio.seci_proyect.dtos.user.UserResponse;
-import co.edu.uniquindio.seci_proyect.dtos.user.UserSearchRequest;
+import co.edu.uniquindio.seci_proyect.dtos.user.*;
 import co.edu.uniquindio.seci_proyect.exceptions.ValueConflictException;
 import co.edu.uniquindio.seci_proyect.mappers.UserMapper;
 import co.edu.uniquindio.seci_proyect.repositories.UserRepository;
+import co.edu.uniquindio.seci_proyect.services.interfaces.EmailService;
 import co.edu.uniquindio.seci_proyect.services.interfaces.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +17,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private UserMapper userMapper;
-
+    private EmailService emailService;
 
     @Override
     public UserResponse createUser(UserRegistrationRequest user) {
@@ -48,4 +47,31 @@ public class UserServiceImpl implements UserService {
                 pageable
         ).map(userMapper::toUserResponse);
     }
+
+    //completar
+    @Override
+    public void activateUser(String activationCode) {
+
+    }
+
+    @Override
+    public UserResponse updateUser(String userId, UserUpdateRequest request) {
+        return null;
+    }
+
+    @Override
+    public void requestPasswordReset(String email) {
+
+    }
+
+    @Override
+    public void resetPassword(PasswordResetRequest request) {
+
+    }
+
+    @Override
+    public void deactivateUser(String userId) {
+
+    }
+    //--
 }
