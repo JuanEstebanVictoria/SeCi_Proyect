@@ -4,12 +4,14 @@ import co.edu.uniquindio.seci_proyect.Model.Category;
 import co.edu.uniquindio.seci_proyect.Model.CategoryStatus;
 import co.edu.uniquindio.seci_proyect.dtos.category.CategoryRequest;
 import co.edu.uniquindio.seci_proyect.dtos.category.CategoryResponse;
+import co.edu.uniquindio.seci_proyect.dtos.category.CategoryWithStatsResponse;
 import co.edu.uniquindio.seci_proyect.exceptions.ResourceNotFoundException;
 import co.edu.uniquindio.seci_proyect.exceptions.ValueConflictException;
 import co.edu.uniquindio.seci_proyect.mappers.CategoryMapper;
 import co.edu.uniquindio.seci_proyect.repositories.CategoryRepository;
 import co.edu.uniquindio.seci_proyect.services.interfaces.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,10 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class CategoryServiceImpl implements CategoryService {
-
-    private final CategoryRepository categoryRepository;
-    private final CategoryMapper categoryMapper;
-
+    private CategoryRepository categoryRepository;
+    private CategoryMapper categoryMapper;
 
     @Override
     public CategoryResponse save(CategoryRequest category) {
@@ -57,7 +57,6 @@ public class CategoryServiceImpl implements CategoryService {
                 .toList();
     }
 
-
     private Category findCategoryById(String id){
         var storedCategory = categoryRepository.findById(id);
 //        if(storedCategory.isEmpty()) {
@@ -71,6 +70,16 @@ public class CategoryServiceImpl implements CategoryService {
         var categoryStored = findCategoryById(id);
         categoryStored.setStatus(CategoryStatus.DELETED);
         categoryRepository.save(categoryStored);
+    }
+
+    @Override
+    public List<CategoryResponse> findAllActive() {
+        return List.of();
+    }
+
+    @Override
+    public Page<CategoryWithStatsResponse> findAllWithStats(int page, int size) {
+        return null;
     }
 
     private void validateCategoryName(String categoryName) {

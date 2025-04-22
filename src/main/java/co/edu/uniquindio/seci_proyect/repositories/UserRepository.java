@@ -1,5 +1,6 @@
 package co.edu.uniquindio.seci_proyect.repositories;
 
+import co.edu.uniquindio.seci_proyect.Model.Rol;
 import co.edu.uniquindio.seci_proyect.Model.User;
 import co.edu.uniquindio.seci_proyect.Model.UserStatus;
 import co.edu.uniquindio.seci_proyect.dtos.user.UserResponse;
@@ -16,8 +17,11 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
 
+    // Consultas básicas
+    List<User> findByRol(Rol rol);
+    List<User> findByStatus(UserStatus status);
     Optional<User> findUserByEmail(String email);
-
+    List<UserResponse> findByStatusNot(UserStatus status);
 
     @Query(value = "{ 'status': { $ne: 'DELETED' }, 'email': ?0 }" )
     Optional<User> findUserByEmailNot(String email);
@@ -29,6 +33,11 @@ public interface UserRepository extends MongoRepository<User, String> {
             sort = "{ 'fullName': 1 }" )
     Page<User> findExistingUsersByFilters(String fullName, String email, LocalDate dateBirth, Pageable pageable);
 
-    List<UserResponse> findByStatusNot(UserStatus status);
+    // Consulta geoespacial para encontrar usuarios cercanos
+    @Query("{'location': {$nearSphere: {$geometry: {type: 'Point', coordinates: [?0, ?1]}, $maxDistance: ?2}}}")
+    List<User> findUsersNearLocation(double longitude, double latitude, double maxDistanceInMeters);
 
+    // Consulta para usuarios con reportes verificados
+    @Query(value = "{'status': 'ACTIVE'}", fields = "{'email': 1, 'fullName': 1}")
+    List<User> findActiveUsersWithProjection();
 }

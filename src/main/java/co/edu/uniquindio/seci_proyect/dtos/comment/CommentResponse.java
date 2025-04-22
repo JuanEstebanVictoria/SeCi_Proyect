@@ -5,8 +5,9 @@ import org.bson.types.ObjectId;
 import java.time.LocalDateTime;
 
 public record CommentResponse(
-        ObjectId userId,
-        ObjectId reportId,
+        String id,
         String content,
-        LocalDateTime date
+        LocalDateTime date,
+        String authorName,
+        String authorId
 ) {}

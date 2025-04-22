@@ -3,6 +3,7 @@ package co.edu.uniquindio.seci_proyect.Model;
 import jakarta.validation.constraints.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,7 +17,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Document("users")
+@Document(collection = "users")
+@CompoundIndex(name = "email_status_idx", def = "{'email': 1, 'status': 1}")
 public class User {
     @Id
     @EqualsAndHashCode.Include

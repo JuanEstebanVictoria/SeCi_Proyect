@@ -31,9 +31,7 @@ public record UserRegistrationRequest(
         LocalDate dateBirth,
 
         Rol rol,
-
         UserStatus status,
-
         GeoJsonPoint location
 
 ) {
