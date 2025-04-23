@@ -9,9 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @EnableConfigurationProperties(DefaultUserProperties.class)
 public class SeCiProyectApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(SeCiProyectApplication.class, args);
     }
-
 }

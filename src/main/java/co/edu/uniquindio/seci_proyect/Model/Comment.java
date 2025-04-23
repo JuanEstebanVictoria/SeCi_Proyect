@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
+
 @Builder
 public class Comment {
 
@@ -23,5 +24,4 @@ public class Comment {
     private ObjectId reportId;
     private String content;
     private LocalDateTime date;
-
 }

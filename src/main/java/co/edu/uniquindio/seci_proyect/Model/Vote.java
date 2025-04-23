@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-
-
 public class Vote {
     @EqualsAndHashCode.Include
     private String id;
