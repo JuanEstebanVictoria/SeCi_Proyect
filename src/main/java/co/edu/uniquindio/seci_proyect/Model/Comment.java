@@ -10,13 +10,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-
-
 public class Comment {
-
     private ObjectId userId;
     private ObjectId reportId;
     private String content;
     private LocalDateTime date;
-
 }

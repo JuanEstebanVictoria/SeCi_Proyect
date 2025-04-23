@@ -10,9 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableConfigurationProperties(DefaultUserProperties.class)
 @ComponentScan(basePackages = {"co.edu.uniquindio.seci_proyect"})
 public class SeCiProyectApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(SeCiProyectApplication.class, args);
     }
-
 }
