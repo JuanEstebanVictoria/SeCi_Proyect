@@ -30,38 +30,35 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentResponse addComment(CommentDTO commentDTO) {
+    public CommentResponse addComment(String reportId, String userId, CommentRequest commentRequest) {
         // Validar reporte
-        Report report = reportRepository.findById(commentDTO.reportId())
+        Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new ResourceNotFoundException("Reporte no encontrado"));
 
-        if(report.getStatus() == ReportStatus.DELETED) {
+        if (report.getStatus() == ReportStatus.DELETED) {
             throw new BusinessRuleException("No se puede comentar un reporte eliminado");
         }
 
         // Validar usuario
-        User user = userRepository.findById(commentDTO.userId())
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
-        if(user.getStatus() != UserStatus.ACTIVE) {
+        if (user.getStatus() != UserStatus.ACTIVE) {
             throw new AuthorizationException("Usuario no está activo");
         }
 
-        // Crear comentario
-        Comment comment = new Comment();
-        comment.setUserId(new ObjectId(commentDTO.userId()));
-        comment.setReportId(new ObjectId(commentDTO.reportId()));
-        comment.setContent(commentDTO.content());
-        comment.setDate(LocalDateTime.now());
+        // Crear comentario usando el mapper
+        Comment comment = commentMapper.toComment(commentRequest, reportId, userId);
 
+        // Guardar
         Comment savedComment = commentRepository.save(comment);
 
-        // Notificar al creador del reporte (excepto si es el mismo usuario)
-        if(!report.getUserId().equals(new ObjectId(commentDTO.userId()))) {
+        // Notificar al creador del reporte, si no es el mismo usuario
+        if (!report.getUserId().equals(new ObjectId(userId))) {
             emailService.sendCommentNotification(
                     report.getUserId().toString(),
                     report.getTitle(),
-                    commentDTO.content()
+                    comment.getContent()
             );
         }
 
