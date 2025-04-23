@@ -2,6 +2,7 @@ package co.edu.uniquindio.seci_proyect.services.impl;
 
 import co.edu.uniquindio.seci_proyect.services.interfaces.EmailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
@@ -11,7 +12,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
+
     private final JavaMailSender mailSender;
+
 
     @Override
     @Async
@@ -55,6 +58,15 @@ public class EmailServiceImpl implements EmailService {
         message.setText("El estado de tu reporte '" + reportTitle + "' ha cambiado a: " + newStatus +
                 (reason != null ? "\nRazón: " + reason : "") +
                 "\n\nIngresa a la plataforma para ver más detalles.");
+        mailSender.send(message);
+    }
+    @Override
+    public void sendReportNotificationEmail(String to, String subject, String body) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(body);
+        message.setFrom("tu_correo@gmail.com");
         mailSender.send(message);
     }
 }

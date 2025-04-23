@@ -7,6 +7,6 @@ public interface EmailService {
     void sendActivationEmail(String to, String activationCode);
     void sendPasswordResetEmail(String to, String resetCode);
     void sendReportNotificationEmail(String to, String reportTitle, String comment);
-
+    void sendReportStatusChangeNotification(String to, String reportTitle, String newStatus, String reason);
     void sendCommentNotification(String string, @NotBlank String title, @NotBlank @Size(max = 500, message = "El comentario no puede exceder los 500 caracteres") String content);
 }

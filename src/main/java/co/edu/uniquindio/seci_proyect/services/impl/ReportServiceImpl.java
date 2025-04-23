@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,10 +36,9 @@ public class ReportServiceImpl implements ReportService {
 
 
     @Override
-    public ReportResponse getReport(String id) {
-        Report report = reportRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Reporte no encontrado"));
-        return reportMapper.toReportResponse(report);
+    public Optional<ReportResponse> getReport(String id) {
+        return reportRepository.findReportById(id)
+                .map(reportMapper::toReportResponse);
     }
 
     // Implementa los demás métodos requeridos por la interfaz
