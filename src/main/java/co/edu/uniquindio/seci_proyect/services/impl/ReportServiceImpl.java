@@ -3,6 +3,7 @@ package co.edu.uniquindio.seci_proyect.services.impl;
 import co.edu.uniquindio.seci_proyect.Model.Report;
 import co.edu.uniquindio.seci_proyect.Model.ReportStatus;
 import co.edu.uniquindio.seci_proyect.Model.User;
+import co.edu.uniquindio.seci_proyect.dtos.report.ReportStatusDTO;
 import co.edu.uniquindio.seci_proyect.dtos.report.ReportRequest;
 import co.edu.uniquindio.seci_proyect.dtos.report.ReportResponse;
 import co.edu.uniquindio.seci_proyect.exceptions.ResourceNotFoundException;
@@ -22,6 +23,7 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -55,9 +57,16 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public ReportResponse updateReportStatus(String reportId, ReportStatus newStatus, String moderatorId, String reason) {
-        return null;
+    public ReportStatusDTO updateReportStatus(String reportId, ReportStatusDTO reportStatusDTO) {
+        Report report = reportRepository.findReportById(reportId)
+                .orElseThrow(() -> new RuntimeException("Report not found"));
+        report.setStatus(reportStatusDTO.newStatus());
+        reportRepository.save(report);
+
+        return new ReportStatusDTO(report.getStatus());
+
     }
+
 
     @Override
     public void addVoteToReport(String reportId, String userId) {

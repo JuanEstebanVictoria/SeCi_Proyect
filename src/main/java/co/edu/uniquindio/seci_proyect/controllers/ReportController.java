@@ -4,6 +4,7 @@ package co.edu.uniquindio.seci_proyect.controllers;
 import co.edu.uniquindio.seci_proyect.dtos.category.CategoryResponse;
 import co.edu.uniquindio.seci_proyect.dtos.report.ReportRequest;
 import co.edu.uniquindio.seci_proyect.dtos.report.ReportResponse;
+import co.edu.uniquindio.seci_proyect.dtos.report.ReportStatusDTO;
 import co.edu.uniquindio.seci_proyect.services.interfaces.ReportService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,16 @@ public class ReportController {
                 .map(ResponseEntity::ok)
                 .orElseGet(()-> ResponseEntity.notFound().build());
     }
+
+    @PatchMapping("/{idReport}/status")
+    public ResponseEntity<ReportStatusDTO> updateReportStatus(@PathVariable("idReport") String idReport, @RequestBody ReportStatusDTO dto) {
+        ReportStatusDTO updatedStatus = reportService.updateReportStatus(idReport, dto);
+        return ResponseEntity.ok(updatedStatus);
+    }
+
+
+
+
 
 
 

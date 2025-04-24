@@ -74,7 +74,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryResponse> findAllActive() {
-        return List.of();
+        return categoryRepository.findByStatus(CategoryStatus.ACTIVE).stream()
+                .map(cat -> new CategoryResponse(cat.getId(), cat.getName(), cat.getDescription(), cat.getStatus()))
+                .toList();
     }
 
     @Override

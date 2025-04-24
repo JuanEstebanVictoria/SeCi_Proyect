@@ -1,5 +1,6 @@
 package co.edu.uniquindio.seci_proyect.services.interfaces;
 
+import co.edu.uniquindio.seci_proyect.dtos.comment.CommentDTO;
 import co.edu.uniquindio.seci_proyect.dtos.comment.CommentRequest;
 import co.edu.uniquindio.seci_proyect.dtos.comment.CommentResponse;
 import jakarta.validation.Valid;
@@ -14,6 +15,6 @@ public interface CommentService {
     CommentResponse updateComment(String commentId, String newContent);
     Object addComment(String reportId, @Valid CommentRequest request);
 
-    List<CommentResponse> getAllComments(String idReport);
+    List<CommentDTO> getAllComments(String idReport);
 
 }

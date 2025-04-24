@@ -5,6 +5,7 @@ import co.edu.uniquindio.seci_proyect.dtos.category.CategoryResponse;
 import co.edu.uniquindio.seci_proyect.services.interfaces.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -24,6 +25,10 @@ public class CategoryController {
     public List<CategoryResponse> getAll() {
         return categoryServices.findAll();
     }
+    @GetMapping
+    public List<CategoryResponse> getAllActive() {
+        return categoryServices.findAllActive();
+    }
 
     @PutMapping("/{id}")
     public CategoryResponse update(@PathVariable String id, @Valid CategoryRequest category) {
@@ -39,5 +44,11 @@ public class CategoryController {
     public CategoryResponse findById(@PathVariable("id")String id) {
         return categoryServices.findById(id);
     }
+    @GetMapping
+    public ResponseEntity<List<CategoryResponse>> getAllActiveCategories() {
+        List<CategoryResponse> categories = categoryServices.findAllActive();
+        return ResponseEntity.ok(categories);
+    }
+
 
 }

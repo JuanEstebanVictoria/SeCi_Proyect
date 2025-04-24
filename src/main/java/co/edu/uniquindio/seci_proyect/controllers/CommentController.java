@@ -26,9 +26,9 @@ public class CommentController {
                 .body((CommentResponse) commentService.addComment(reportId, request));
     }
     @GetMapping("/{reportId}")
-    public ResponseEntity<List<CommentResponse>> getAllComments(
-            @RequestParam(required = false) String idReport) {
-        return ResponseEntity.ok(commentService.getAllComments(idReport));
+    public ResponseEntity<List<CommentDTO>> getAllComments(
+            @PathVariable String reportId) {
+        return ResponseEntity.ok(commentService.getAllComments(reportId));
     }
 
     @DeleteMapping("/{commentId}")

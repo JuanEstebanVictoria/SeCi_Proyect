@@ -48,4 +48,8 @@ public interface UserRepository extends MongoRepository<User, String> {
     List<User> findActiveUsersWithProjection();
 
 
+
+
+    Optional<User> findExistingUserByEmail(String email);
+
 }
