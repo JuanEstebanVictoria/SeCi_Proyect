@@ -40,4 +40,6 @@ public interface UserRepository extends MongoRepository<User, String> {
     // Consulta para usuarios con reportes verificados
     @Query(value = "{'status': 'ACTIVE'}", fields = "{'email': 1, 'fullName': 1}")
     List<User> findActiveUsersWithProjection();
+
+    Optional<User> findExistingUserByEmail(String email);
 }

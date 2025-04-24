@@ -31,26 +31,26 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public CommentResponse addComment(String reportId, String userId, CommentRequest commentRequest) {
-        // Validar reporte
+        // Validate report
         Report report = reportRepository.findById(reportId)
-                .orElseThrow(() -> new ResourceNotFoundException("Reporte no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Report not found"));
 
         if (report.getStatus() == ReportStatus.DELETED) {
-            throw new BusinessRuleException("No se puede comentar un reporte eliminado");
+            throw new BusinessRuleException("Comment already deleted");
         }
 
-        // Validar usuario
+        // Validate user
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuar not found"));
 
         if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new AuthorizationException("Usuario no está activo");
+            throw new AuthorizationException("Usuar not active");
         }
 
-        // Crear comentario usando el mapper
+        // Create comments by mapper
         Comment comment = commentMapper.toComment(commentRequest, reportId, userId);
 
-        // Guardar
+        // save
         Comment savedComment = commentRepository.save(comment);
 
         // Notificar al creador del reporte, si no es el mismo usuario
