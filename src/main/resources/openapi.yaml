@@ -1,0 +1,1351 @@
+openapi: 3.0.3
+info:
+  title: API REST FOR SeCi PLATFORM
+  description: API to manage the platform
+  version: 1.0.0
+
+servers:
+  - url: https://api.tuservicio.com
+    description: Servidor de producción
+  - url: http://localhost:3000
+    description: Servidor local
+
+paths:
+
+  /users:
+    post:
+      summary: Create a new user
+      tags:
+        - Users
+
+      operationId: registerUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRegistration"
+      responses:
+        "201":
+          description: user created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+              example:
+                code: CREATED
+                message: user created successfully
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: BAD_REQUEST
+                message: invalid input data
+        "409":
+          description: email already registred
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: CONFLICT
+                message: email already registred
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: Internal Server Error
+                message: unexpected error
+    get:
+      summary: Get all users (Only admin)
+      description: Retrieves a list of all registered users. Only accessible by administrators.
+      tags:
+        - Users
+      security:
+        - BearerAuth: []
+      operationId: getAllUsers
+      parameters:
+        - name: role
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [user, admin]
+          description: Filter users by  role (user or admin)
+
+        - name: email
+          in: query
+          required: false
+          schema:
+            type: string
+            format: email
+          description: Filter users by email
+
+        - name: fullName
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter users by  full name
+
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+          description: Page number for pagination
+
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+          description: Number of users  per page (max 100)
+
+      responses:
+        "200":
+          description: List of users retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PaginatedUsersResponse"
+        "401":
+          description: Unauthorized - User not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: "401 Unauthorized"
+                message: "Authentication token is missing or invalid"
+
+        "403":
+          description: Forbidden - User does not have permission to view users
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: "403 Forbidden"
+                message: "You do not have permission to view users"
+
+        "500":
+          description: Internal Server Error - Something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: "500 Internal Server Error"
+                message: "An unexpected error occurred"
+
+  /users/login:
+    post:
+      summary: Log in
+      tags:
+        - Users
+
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserResponse"
+
+
+      responses:
+        "200":
+          description: athentication successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    $ref: "#/components/schemas/UserResponse"
+              example:
+                code: OK
+                message: athentication successfully
+        "401":
+          description: incorrect credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: Unauthorized
+                message: user not authenticated
+  /users/me:
+
+
+    put:
+      summary: User update
+      tags:
+        - Users
+
+      operationId: updateUser
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: user update successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+              example:
+                code: OK
+                message: user update successfully
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: BAD_REQUEST
+                message: invalid input data
+        "401":
+          description: not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: NOT_AUTHENTICATED
+                message: user not authenticated
+        "409":
+          description: email already registred
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: CONFLICT
+                message: email already registred
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: Internal Server Error
+                message: unexpected error
+    delete:
+      summary: Delete account
+      tags:
+        - Users
+
+      operationId: deleteUser
+      security:
+        - BearerAuth: []
+      responses:
+        "204":
+          description: account deleted successfully
+        "401":
+          description: not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: "UNAUTHORIZED"
+                message: "User is not authenticated."
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: "USER_NOT_FOUND"
+                message: "The user does not exist."
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: "INTERNAL_SERVER_ERROR"
+                message: "An unexpected error occurred."
+
+    get:
+      summary: Get personal info
+      tags:
+        - Users
+
+      operationId: getUserProfile
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: personal info obtained
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+              example:
+                code: OK
+                message: personal info obtained
+        "401":
+          description: not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: Unauthorized
+                message:  not authenticated
+
+  /auth/recovery-code:
+
+    post:
+      summary: Send verification code
+      tags:
+        - Authentication
+      operationId: sendVerificationCode
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordResetResponse"
+      responses:
+        "200":
+          description: code sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PasswordResetResponse"
+              example:
+                code: OK
+                message: code sent successfully
+        "400":
+          description: Invalid email format
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PasswordResetResponse"
+              example:
+                code: BAD_REQUEST
+                message: Invalid email format
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PasswordResetResponse"
+              example:
+                code: INTERNAL_SERVER_ERROR
+                message: Unexpected error
+
+  /auth/recovery-code/validation:
+    post:
+      summary: Validate verification code
+      tags:
+        - Authentication
+      operationId: validateVerificationCode
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordResetValidationRequest"
+      responses:
+        "200":
+          description: Verification code is valid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PasswordResetValidationResponse"
+              example:
+                code: OK
+                message: Verification code is valid
+        "400":
+          description: Invalid or expired verification code
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: BAD_REQUEST
+                message: Invalid or expired verification code
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: INTERNAL_SERVER_ERROR
+                message: Unexpected error
+
+  /auth/passwords:
+
+    post:
+      summary: Reset user password
+      tags:
+        - Authentication
+      operationId: resetPassword
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordResetRequest"
+      responses:
+        "200":
+          description: Password reset successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PasswordResetResponse"
+              example:
+                code: OK
+                message: Password reset successfully
+        "400":
+          description: Invalid request (e.g., passwords do not match)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: BAD_REQUEST
+                message: Passwords do not match
+        "404":
+          description: Invalid or expired verification code
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: NOT_FOUND
+                message: Invalid or expired verification code
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: INTERNAL_SERVER_ERROR
+                message: Unexpected error
+
+  /reports:
+
+
+    post:
+      summary: Create a new report
+      tags:
+        - Reports
+
+      security:
+        - BearerAuth: []
+      operationId: createReport
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReportResponse"
+      responses:
+        "201":
+          description: report created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReportResponse"
+              example:
+                code: Created
+                message: report created successfully
+        "400":
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: BAD_REQUEST
+                message: invalid input data
+        "401":
+          description: not authenticated
+          content:
+            application/json:
+              schema:
+                $ref:  "#/components/schemas/ErrorResponse"
+              example:
+                code: Unauthorized
+                message: not authenticated
+
+  /reports/{id}:
+    get:
+      summary: Get a report by ID
+      description: Returns the details of a specific report given its ID.
+      tags:
+        - Reports
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Report ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Report successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportResponse'
+        '404':
+          description: Report not found
+        '500':
+          description: Internal server error
+
+  /categories:
+
+    post:
+      summary: Create a new category report (Only admin)
+      description: Creates a new category for reports. Only accessible by administrators.
+      tags:
+        - Categories
+      security:
+        - BearerAuth: []
+      operationId: createCategoryReport
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryRequest"
+            example:
+              name: "FIRE"
+              status: ACTIVE
+      responses:
+        "201":
+          description: Category report created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoryResponse"
+              example:
+                code: "201 Created"
+                message: "Category created"
+
+        "400":
+          description: Bad request - Invalid or missing category name
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: "400 Bad Request"
+                message: "Category name is required"
+
+        "401":
+          description: Unauthorized - User not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: "401 Unauthorized"
+                message: "Authentication token is missing or invalid"
+
+        "403":
+          description: Forbidden - User does not have permission to create categories
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: "403 Forbidden"
+                message: "You do not have permission to create a category"
+
+        "409":
+          description: Conflict - Category name already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: "409 Conflict"
+                message: "Category already exists"
+
+        "500":
+          description: Internal Server Error - Something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: "500 Internal   Server Error"
+                message: "An unexpected error occurred"
+
+  /categories/{id}:
+    get:
+      summary: Get a category by ID
+      description: Retrieves the details of a specific category using its ID.
+      tags:
+        - Categories
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Category ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Category successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+        '404':
+          description: Category not found
+        '500':
+          description: Internal server error
+    delete:
+      summary: Delete a category by ID
+      description: Deletes a specific category identified by its ID.
+      tags:
+        - Categories
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Category ID
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Category successfully deleted (no content)
+        '404':
+          description: Category not found
+        '500':
+          description: Internal server error
+  /comments/{reportId}/:
+
+    post:
+      summary: Add a comment report
+      tags:
+        - Comments
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentRequest"
+      responses:
+        "200":
+          description: aggregated correctly
+    get:
+      summary: Get all comments for a report
+      tags:
+        - Comments
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the report to get comments for
+      responses:
+        "200":
+          description: List of comments for the report
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommentResponse'
+  /comments/{commentId}/:
+
+    delete:
+      summary: detele a comment
+      tags:
+        - Comments
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description:  comment deleted
+        "404":
+          description: report not found
+  /reports/{idReport}/vote:
+    post:
+      summary: vote for important
+      tags:
+        - Reports
+      parameters:
+        - name: idReport
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  example: "efre84gt8e"
+      responses:
+        "200":
+          description: voted successfully
+  /reports/{idReport}/status:
+    patch:
+      summary: Verify and soft delete a report
+      tags:
+        - Reports
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: idReport
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [PENDING, VERIFIED, DELETED, DECLINED]
+                  example: VERIFIED
+      responses:
+        "200":
+          description: Report verified successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Report has been verified successfully."
+        "403":
+          description: Unauthorized - Only admins can verify reports
+        "404":
+          description: Report not found
+
+  /reports/pdf:
+    get:
+      summary: Generate and download a PDF report
+      tags:
+        - Reports
+      security:
+        - BearerAuth: []
+      operationId: generatePdfReport
+      parameters:
+        - name: startDate
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+            example: "2024-03-01"
+          description: Filter reports from this date (optional)
+        - name: endDate
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+            example: "2024-03-08"
+          description: Filter reports until this date (optional)
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "Robo"
+          description: Filter reports by category (optional)
+      responses:
+        "200":
+          description: PDF report generated successfully
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: "400 Bad Request"
+                message: "Invalid date range"
+        "401":
+          description: Unauthorized - Only administrators can access
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: "401 Unauthorized"
+                message: "Access token is missing or invalid"
+        "500":
+          description: Server error while generating PDF
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                code: "500 Internal Server Error"
+                message: "An error occurred while generating the report"
+
+
+
+  /images/:
+    post:
+      summary: Upload an image
+      tags:
+        - Images
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Image file to upload
+      responses:
+        "200":
+          description: Image uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  imageUrl:
+                    type: string
+                    example: "https://your-storage-service.com/uploads/image123.jpg"
+        "400":
+          description: Invalid file format or missing file
+        "401":
+          description: Unauthorized - User must be logged in
+        "500":
+          description: Server error while uploading image
+
+  /notifications:
+    post:
+      summary: "Create a new notification (Admin only)"
+      description: "Only an administrator can create a notification."
+      security:
+        - bearerAuth: []  # Autenticación requerida
+      tags:
+        - Notifications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateNotificationDTO"
+      responses:
+        "201":
+          description: "Notification created successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationResponse"
+        "403":
+          description: "Forbidden - Only admins can create notifications"
+        "401":
+          description: "Unauthorized - Missing or invalid token"
+    get:
+      summary: Get notifications for the  users
+      tags:
+        - Notifications
+      responses:
+        "200":
+          description: Notifications retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationResponse"
+        "401":
+          description: Unauthorized - User not authenticated
+  /notifications/{notificationId}:
+    patch:
+      summary: Mark a notification as read
+      tags:
+        - Notifications
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: notificationId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the notification to mark as read
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                read:
+                  type: boolean
+                  example: true
+      responses:
+        "200":
+          description: Notification marked as read successfully
+        "400":
+          description: Invalid notification ID
+        "401":
+          description: Unauthorized - User not authenticated
+        "404":
+          description: Notification not found
+components:
+
+  schemas:
+
+    NotificationResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "fsweg12f12"
+        message:
+          type: string
+          example: "correct the report."
+        date:
+          type: string
+          format: date-time
+          example: "2024-03-27T14:30:00Z"
+        read:
+          type: boolean
+          example: false
+        reportId:
+          type: string
+        reportTitle:
+          type: string
+
+
+    CreateNotificationDTO:
+      type: object
+      required:
+        - message
+        - read
+      properties:
+
+        message:
+          type: string
+          example: "System maintenance scheduled for tomorrow at 10 AM."
+        receiverId:
+          type: string
+        reportId:
+          type : string
+
+    PasswordResetRequest:
+      type: object
+      properties:
+        newPassword:
+          type: string
+          format: password
+          example: "NewStrongPassword123"
+        confirmPassword:
+          type: string
+          format: password
+          example: "NewStrongPassword123"
+
+
+
+    PasswordResetResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "123456"
+        message:
+          type: string
+          example: "A reset code has been sent to your email."
+
+    UserUpdate:
+      type: object
+      properties:
+        fullName:
+          type: string
+          maxLength: 100
+        phone:
+          type: string
+          maxLength: 10
+        location:
+          type: object
+          properties:
+            latitude:
+              type: number
+              format: double
+              example: 4.6097
+            longitude:
+              type: number
+              format: double
+              example: -74.0817
+            radius:
+              type: number
+              format: double
+              example: 500
+              description: "Coverage radius in meters to make reports"
+      required:
+        - fullName
+    UserRegistration:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+          pattern: "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).*$"
+          description: The password´s user (Must contain at least one digit, one uppercase and one lowercase)
+        fullName:
+          type: string
+          maxLength: 100
+        dateBirth:
+          type: string
+          format: date
+          example: "1990-01-01"
+        rol:
+          type: string
+          enum:
+            - user
+            - admin
+          default: user
+        phone:
+          type: string
+          maxLength: 10
+        location:
+          type: object
+          properties:
+            latitude:
+              type: number
+              format: double
+              example: -34.6037
+            longitude:
+              type: number
+              format: double
+              example: -58.3816
+
+      required:
+        - fullName
+        - email
+        - password
+        - phone
+        - location
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        fullName:
+          type: string
+        dateBirth:
+          type: string
+          format: date
+        role:
+          type: string
+        phone:
+          type: string
+        location:
+          type: object
+          properties:
+            latitude:
+              type: number
+              format: double
+            longitude:
+              type: number
+              format: double
+            radius:
+              type: number
+              format: double
+      required:
+        - id
+        - email
+        - fullName
+        - rol
+        - location
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "USER_NOT_FOUND"
+          description: Specific error code
+        message:
+          type: string
+          example: "The user with the provided ID does not exist."
+          description: Detailed error description
+        details:
+          type: array
+          items:
+            type: string
+          example:
+            - "The 'latitude' field is required."
+            - "The radius must be greater than 100 meters."
+          description: List of specific errors in the request (optional)
+      required:
+        - code
+        - message
+
+    ReportResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "661f3b7e2d3a4b002b8c7f13"
+        title:
+          type: string
+          example: "Robbery on main street"
+        category:
+          type: string
+          example: "security"
+        description:
+          type: string
+          example: "An armed robbery was reported near the supermarket."
+        location:
+          type: object
+          properties:
+            latitude:
+              type: number
+              format: double
+              example: 4.6097
+            longitude:
+              type: number
+              format: double
+              example: -74.0817
+        imageUrl:
+          type: string
+          format: uri
+          example: "https://imagenes-reporte.com/imagen123.jpg"
+        status:
+          type: string
+          enum:
+            - pending
+            - verified
+            - deleted
+            - declined
+          example: "pending"
+          description: "Report status: pending, verified, rejected or resolved."
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-03-06T14:30:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2024-03-06T15:00:00Z"
+        importanceCount:
+          type: integer
+          example: 15
+          description: "Number of users who marked the report as important."
+        reportedBy:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "1234231"
+        comments:
+          type: array
+          items:
+            type: object
+            properties:
+              userId:
+                type: string
+                example: "fdewfn4ewfwe"
+              reportId:
+                type: string
+                example: "rufgeri45fs45"
+              content:
+                type: string
+                example: "I saw it"
+              date:
+                type: string
+                format: date-time
+                example:
+                  "2025-04-05T14:30:00"
+        votes:
+          type: array
+          items:
+            type: object
+            properties:
+              id :
+                type: string
+                example: "6610149c1f47"
+              userId:
+                type: string
+                example: "fcvh54daf"
+              reportId:
+                type: string
+                example: "gfrwegr484"
+              timestamp:
+                type: string
+                format: date-time
+                example: "2025-04-05T14:30:00"
+      required:
+        - id
+        - title
+        - category
+        - description
+        - location
+        - status
+        - createdAt
+        - reportedBy
+
+    PasswordResetValidationRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        code:
+          type: string
+          example: "123456"
+
+    PasswordResetValidationResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          example: OK
+        message:
+          type: string
+          example: Verification code is valid
+    CategoryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Security"
+        description:
+          type: string
+          example: "My house is on fire"
+
+      required:
+        - name
+    CategoryResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "efew4sw"
+        name:
+          type: string
+          example: killer
+        description:
+          type: string
+          example: " several dead people"
+        status:
+          type: string
+          enum : [ACTIVE, INACTIVE]
+          example: ACTIVE
+    CommentRequest:
+      type: object
+      properties:
+        content:
+          type: string
+          example: "Este reporte necesita atención inmediata."
+      required:
+        - content
+    CommentResponse:
+      type: object
+      properties:
+        userId:
+          type: string
+          example: "4g54rdf"
+        reportId:
+          type: string
+          example: "5f4ewf"
+        content:
+          type: string
+          example: "Estoy de acuerdo con este reporte."
+        date:
+          type: string
+          format: date-time
+          example: "2024-03-06T15:00:00Z"
+
+    PaginatedUsersResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserResponse"
+        pagination:
+          type: object
+          properties:
+            page:
+              type: integer
+              example: 1
+            limit:
+              type: integer
+              example: 10
+            totalPages:
+              type: integer
+              example: 5
+            totalItems:
+              type: integer
+              example: 42
