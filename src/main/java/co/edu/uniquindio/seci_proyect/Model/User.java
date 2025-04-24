@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.UUID;
 
 @Getter
@@ -64,5 +65,9 @@ public class User {
         return this.resetPasswordCode != null &&
                 this.resetPasswordCodeExpiry != null &&
                 this.resetPasswordCodeExpiry.isAfter(LocalDateTime.now());
+    }
+
+    public Collection<Object> getRoles() {
+        return null;
     }
 }
