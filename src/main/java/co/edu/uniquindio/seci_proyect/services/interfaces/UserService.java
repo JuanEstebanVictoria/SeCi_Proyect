@@ -1,8 +1,12 @@
 package co.edu.uniquindio.seci_proyect.services.interfaces;
 
+import co.edu.uniquindio.seci_proyect.Model.Rol;
 import co.edu.uniquindio.seci_proyect.dtos.user.*;
+import co.edu.uniquindio.seci_proyect.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.GrantedAuthority;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,4 +26,6 @@ public interface UserService {
     List<UserResponse> getAllUsers();
     String deleteUser(String id) throws Exception;
     String activateAccount(String activationCode) throws Exception;
+    UserResponse getUserByEmail(String email) throws ResourceNotFoundException;
+    Collection<? extends GrantedAuthority> getAuthorities(Rol rol);
 }
