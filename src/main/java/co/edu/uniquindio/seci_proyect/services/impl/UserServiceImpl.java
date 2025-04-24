@@ -1,5 +1,6 @@
 package co.edu.uniquindio.seci_proyect.services.impl;
 
+import co.edu.uniquindio.seci_proyect.Model.Rol;
 import co.edu.uniquindio.seci_proyect.Model.User;
 import co.edu.uniquindio.seci_proyect.Model.UserStatus;
 import co.edu.uniquindio.seci_proyect.dtos.user.*;
@@ -13,14 +14,14 @@ import co.edu.uniquindio.seci_proyect.services.interfaces.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -185,5 +186,16 @@ public class UserServiceImpl implements UserService {
 
     private String generateActivationCode() {
         return UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    }
+    @Override
+    public UserResponse getUserByEmail(String email) throws ResourceNotFoundException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        return UserMapper.toUserResponse(user); // Asume que tienes un mapper
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities(Rol rol) {
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + rol.name()));
     }
 }
