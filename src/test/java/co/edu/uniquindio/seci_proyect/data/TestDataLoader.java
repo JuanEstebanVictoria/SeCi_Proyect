@@ -33,4 +33,5 @@ public class TestDataLoader {
                 .forEach(mongoTemplate::dropCollection);
         return userRespository.saveAll(newUsers).stream().collect(Collectors.toMap(User::getId, usuario -> usuario));
     }
+
 }
