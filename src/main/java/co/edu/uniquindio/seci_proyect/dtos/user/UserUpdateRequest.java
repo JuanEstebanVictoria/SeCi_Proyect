@@ -8,5 +8,6 @@ import java.time.LocalDate;
 
 public record UserUpdateRequest(
         String fullName,
-        GeoJsonPoint location
+        GeoJsonPoint location,
+        @Past(message = "La fecha de nacimiento debe ser en el pasado") LocalDate dateBirth
 ) {}

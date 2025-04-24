@@ -19,12 +19,10 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
-
+    private UserService userService;
 
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRegistrationRequest request) {
-
         var response = userService.createUser(request);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -32,7 +30,6 @@ public class UserController {
                 .buildAndExpand(response.id())
                 .toUri();
         return ResponseEntity.created(location).body(response);
-
     }
 
     @GetMapping("/{id}")
@@ -45,6 +42,7 @@ public class UserController {
     public Page<UserResponse> searchUsers(UserSearchRequest request) {
         return userService.searchUsers(request);
     }
+
 
 
 

@@ -20,7 +20,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class ReportController {
 
-    private final ReportService reportService;
+    private ReportService reportService;
 
     @PostMapping
     public ResponseEntity<ReportResponse> createReport(@Valid @RequestBody ReportRequest  report) {

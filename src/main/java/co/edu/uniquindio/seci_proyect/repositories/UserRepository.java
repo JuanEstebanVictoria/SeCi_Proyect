@@ -9,6 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
+import co.edu.uniquindio.seci_proyect.Model.User;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import java.util.Optional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,9 +25,12 @@ public interface UserRepository extends MongoRepository<User, String> {
     List<User> findByStatus(UserStatus status);
     Optional<User> findUserByEmail(String email);
     List<UserResponse> findByStatusNot(UserStatus status);
+    Optional<User> findByEmail(String email);
+    boolean existsByEmail(String email);
 
-    @Query(value = "{ 'status': { $ne: 'DELETED' }, 'email': ?0 }" )
-    Optional<User> findUserByEmailNot(String email);
+    Optional<User> findByActivationCode(String activationCode);
+    Optional<User> findByResetPasswordCode(String resetPasswordCode);
+   // Optional<User> findUserByEmailNot(String email);
 
     @Query(value =  "{ 'status': { $ne: 'DELETED' }, " +
             "  'fullName': { $regex: ?0, $options: 'i' }, " +
@@ -41,5 +47,9 @@ public interface UserRepository extends MongoRepository<User, String> {
     @Query(value = "{'status': 'ACTIVE'}", fields = "{'email': 1, 'fullName': 1}")
     List<User> findActiveUsersWithProjection();
 
+
+
+
     Optional<User> findExistingUserByEmail(String email);
+
 }

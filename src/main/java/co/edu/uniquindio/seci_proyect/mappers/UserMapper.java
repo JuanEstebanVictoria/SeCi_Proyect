@@ -12,8 +12,9 @@ import org.mapstruct.MappingConstants;
 public interface UserMapper {
     @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
     @Mapping(target = "status", constant = "REGISTERED")
-    @Mapping(target = "password" , expression = "java( new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode(userDTO.password()) )")
+    @Mapping(target = "password", expression = "java( new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode(userDTO.password()) )")
     User parseOf(UserRegistrationRequest userRegistrationRequest);
 
+    @Mapping(source = "dateBirth", target = "dateBirth", dateFormat = "yyyy-MM-dd")
     UserResponse toUserResponse(User user);
 }
