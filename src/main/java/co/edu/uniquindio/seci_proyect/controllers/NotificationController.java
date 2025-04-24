@@ -9,6 +9,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/notifications")
 @RequiredArgsConstructor
 public class NotificationController {
-
-
 }
