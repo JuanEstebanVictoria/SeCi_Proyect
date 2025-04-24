@@ -23,6 +23,7 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -65,6 +66,7 @@ public class ReportServiceImpl implements ReportService {
         return new ReportStatusDTO(report.getStatus());
 
     }
+
 
     @Override
     public void addVoteToReport(String reportId, String userId) {

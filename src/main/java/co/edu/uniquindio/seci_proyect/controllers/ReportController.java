@@ -40,11 +40,12 @@ public class ReportController {
                 .orElseGet(()-> ResponseEntity.notFound().build());
     }
 
-    @PatchMapping("/{idReport}/verification")
+    @PatchMapping("/{idReport}/status")
     public ResponseEntity<ReportStatusDTO> updateReportStatus(@PathVariable("idReport") String idReport, @RequestBody ReportStatusDTO dto) {
         ReportStatusDTO updatedStatus = reportService.updateReportStatus(idReport, dto);
         return ResponseEntity.ok(updatedStatus);
     }
+
 
 
 

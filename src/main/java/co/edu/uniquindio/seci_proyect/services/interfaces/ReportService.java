@@ -11,9 +11,9 @@ import java.util.Optional;
 public interface ReportService {
     ReportResponse createReport(ReportRequest report);
     Optional<ReportResponse>getReport(String id);
+    ReportStatusDTO updateReportStatus(String reportId, ReportStatusDTO reportStatusDTO);
     Page<ReportResponse> listReportsByStatus(ReportStatus status, int page, int size);
     List<ReportResponse> findVerifiedReportsNearUser(String userId, double radiusInKm);
-    ReportStatusDTO updateReportStatus(String reportId, ReportStatusDTO reportStatusDTO);
     void addVoteToReport(String reportId, String userId);
     Page<ReportResponse> searchReports(String keyword, List<String> categoryIds, ReportStatus status, int page, int size);
 }
