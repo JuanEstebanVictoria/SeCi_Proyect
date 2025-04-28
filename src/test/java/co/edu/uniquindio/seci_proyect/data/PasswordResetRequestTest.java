@@ -21,28 +21,28 @@ class PasswordResetRequestTest {
 
     @Test
     void whenAllFieldsCorrect_thenNoViolations() {
-        PasswordResetRequest request = new PasswordResetRequest("ABC123", "NewPassword123!");
+        PasswordResetRequest request = new PasswordResetRequest("user1@user.com","ABC123", "NewPassword123!");
         var violations = validator.validate(request);
         assertTrue(violations.isEmpty());
     }
 
     @Test
     void whenResetCodeBlank_thenOneViolation() {
-        PasswordResetRequest request = new PasswordResetRequest("", "NewPassword123!");
+        PasswordResetRequest request = new PasswordResetRequest("user1@user.com","ABC123", "NewPassword123!");
         var violations = validator.validate(request);
         assertEquals(1, violations.size());
     }
 
     @Test
     void whenNewPasswordBlank_thenOneViolation() {
-        PasswordResetRequest request = new PasswordResetRequest("ABC123", "");
+        PasswordResetRequest request = new PasswordResetRequest("user1@user.com","ABC123", "");
         var violations = validator.validate(request);
         assertEquals(1, violations.size());
     }
 
     @Test
     void whenAllFieldsBlank_thenTwoViolations() {
-        PasswordResetRequest request = new PasswordResetRequest("", "");
+        PasswordResetRequest request = new PasswordResetRequest("","", "");
         var violations = validator.validate(request);
         assertEquals(2, violations.size());
     }

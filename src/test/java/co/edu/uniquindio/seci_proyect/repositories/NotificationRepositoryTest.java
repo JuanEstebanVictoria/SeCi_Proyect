@@ -19,7 +19,6 @@ class NotificationRepositoryTest {
 
     @Autowired
     private NotificationRepository notificationRepository;
-
     private Notification testNotification;
     private String testReceiverId = "test-receiver-id";
 

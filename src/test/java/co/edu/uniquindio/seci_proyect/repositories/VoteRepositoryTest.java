@@ -18,7 +18,6 @@ class VoteRepositoryTest {
 
     @Autowired
     private VoteRepository voteRepository;
-
     private Vote testVote;
     private ObjectId testUserId = new ObjectId();
     private ObjectId testReportId = new ObjectId();

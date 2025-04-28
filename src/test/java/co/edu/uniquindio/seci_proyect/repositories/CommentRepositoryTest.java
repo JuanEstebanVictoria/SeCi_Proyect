@@ -20,7 +20,6 @@ class CommentRepositoryTest {
 
     @Autowired
     private CommentRepository commentRepository;
-
     private Comment testComment;
     private ObjectId testUserId = new ObjectId();
     private ObjectId testReportId = new ObjectId();
