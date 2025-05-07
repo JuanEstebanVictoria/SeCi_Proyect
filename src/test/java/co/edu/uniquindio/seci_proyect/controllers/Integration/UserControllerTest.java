@@ -6,6 +6,7 @@ import co.edu.uniquindio.seci_proyect.Model.UserStatus;
 import co.edu.uniquindio.seci_proyect.controllers.Integration.utils.LoginUtil;
 import co.edu.uniquindio.seci_proyect.data.TestDataLoader;
 import co.edu.uniquindio.seci_proyect.dtos.user.UserRegistrationRequest;
+import co.edu.uniquindio.seci_proyect.dtos.user.UserUpdateRequest;
 import co.edu.uniquindio.seci_proyect.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,12 +16,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -103,4 +106,156 @@ public class UserControllerTest {
                 // Sección de Assert: Se verifica que la respuesta obtenida sea la esperada (404).
                 .andExpect(status().isNotFound());
     }
+    @Test
+    void testSearchUsersSuccess() throws Exception {
+        // Preparar datos
+        User adminUser = users.values().stream()
+                .filter(u -> u.getRol() == Rol.ADMIN)
+                .findFirst()
+                .orElseThrow();
+
+        String token = LoginUtil.login(
+                adminUser.getEmail(),
+                adminUser.getPassword().replace("{noop}", ""),
+                mockMvc,
+                objectMapper
+        );
+
+        // Ejecutar prueba
+        mockMvc.perform(get("/users")
+                        .header("Authorization", "Bearer " + token)
+                        .param("fullName", adminUser.getFullName().substring(0, 3))
+                        .param("email", adminUser.getEmail().substring(0, 3))
+                        .param("page", "0")
+                        .param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].fullName").value(adminUser.getFullName()))
+                .andExpect(jsonPath("$.content[0].email").value(adminUser.getEmail()));
+    }
+
+    @Test
+    void testSearchUsersUnauthorizedForNonAdmin() throws Exception {
+
+        User regularUser = users.values().stream()
+                .filter(u -> u.getRol() == Rol.USER)
+                .findFirst()
+                .orElseThrow();
+
+        String token = LoginUtil.login(
+                regularUser.getEmail(),
+                regularUser.getPassword().replace("{noop}", ""),
+                mockMvc,
+                objectMapper
+        );
+
+
+        mockMvc.perform(get("/users")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isForbidden());
+    }
+    @Test
+    void testUpdateUserSuccess() throws Exception {
+        // Preparar datos
+        User userToUpdate = users.values().stream()
+                .filter(u -> u.getRol() == Rol.USER)
+                .findFirst()
+                .orElseThrow();
+
+        String token = LoginUtil.login(
+                userToUpdate.getEmail(),
+                userToUpdate.getPassword().replace("{noop}", ""),
+                mockMvc,
+                objectMapper
+        );
+
+        UserUpdateRequest updateRequest = new UserUpdateRequest(
+                "Nombre Actualizado",
+                new GeoJsonPoint(-75.123, 4.567),
+                LocalDate.of(1990, 1, 1)
+        );
+
+        // Ejecutar prueba
+        mockMvc.perform((org.springframework.test.web.servlet.RequestBuilder) put("/users/{id}", userToUpdate.getId())
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.valueOf("application/json"))
+                        .contentType(MediaType.valueOf(objectMapper.writeValueAsString(updateRequest))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.fullName").value(updateRequest.fullName()));
+    }
+
+    @Test
+    void testUpdateUserUnauthorizedForOtherUser() throws Exception {
+        // Preparar datos
+        User user1 = users.values().stream()
+                .filter(u -> u.getRol() == Rol.USER)
+                .findFirst()
+                .orElseThrow();
+
+        User user2 = users.values().stream()
+                .filter(u -> u.getRol() == Rol.USER && !u.getId().equals(user1.getId()))
+                .findFirst()
+                .orElseThrow();
+
+        String token = LoginUtil.login(
+                user1.getEmail(),
+                user1.getPassword().replace("{noop}", ""),
+                mockMvc,
+                objectMapper
+        );
+
+        UserUpdateRequest updateRequest = new UserUpdateRequest(
+                "Nombre Actualizado",
+                new GeoJsonPoint(-75.123, 4.567),
+                LocalDate.of(1990, 1, 1)
+        );
+
+        // Ejecutar prueba
+        mockMvc.perform((org.springframework.test.web.servlet.RequestBuilder) put("/users/{id}", user2.getId())
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.valueOf("application/json"))
+                        .contentType(MediaType.valueOf(objectMapper.writeValueAsString(updateRequest))))
+                .andExpect(status().isForbidden());
+    }
+    @Test
+    void testCreateUserWithInvalidEmail() throws Exception {
+        // Preparar datos inválidos
+        var invalidUser = new UserRegistrationRequest(
+                "invalid-email",
+                "Juan Perez",
+                "12345Abc",
+                LocalDate.of(1980, 6, 25),
+                Rol.USER,
+                UserStatus.ACTIVE,
+                new GeoJsonPoint(4551.1, 6451.1)
+        );
+
+        // Ejecutar prueba
+        mockMvc.perform(post("/users")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(invalidUser)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.email").exists());
+    }
+
+    @Test
+    void testCreateUserWithWeakPassword() throws Exception {
+        // Preparar datos inválidos
+        var invalidUser = new UserRegistrationRequest(
+                "juan@example.com",
+                "Juan Perez",
+                "1234", // Contraseña débil
+                LocalDate.of(1980, 6, 25),
+                Rol.USER,
+                UserStatus.ACTIVE,
+                new GeoJsonPoint(4551.1, 6451.1)
+        );
+
+        // Ejecutar prueba
+        mockMvc.perform(post("/users")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(invalidUser)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.password").exists());
+    }
+
 }

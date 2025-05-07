@@ -1,6 +1,7 @@
 package co.edu.uniquindio.seci_proyect.security;
 
 import co.edu.uniquindio.seci_proyect.dtos.security.CustomUserDetails;
+import co.edu.uniquindio.seci_proyect.exceptions.TokenException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
