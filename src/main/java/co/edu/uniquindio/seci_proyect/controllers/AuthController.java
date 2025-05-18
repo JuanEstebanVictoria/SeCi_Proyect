@@ -9,31 +9,34 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("")
 @RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
 
+    // POST /users
+    @PostMapping("/users")
+    public ResponseEntity<LoginResponse> registerUser(@Valid @RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(authService.register(request));
+    }
+
+    // POST /login
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 
+    // POST /refresh
     @PostMapping("/refresh")
     public ResponseEntity<LoginResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
         return ResponseEntity.ok(authService.refreshToken(request));
     }
 
+    // POST /password-reset/request
     @PostMapping("/password-reset/request")
-    public ResponseEntity<Void> requestPasswordReset(@RequestParam String email) {
-        authService.requestPasswordReset(email);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/password-reset")
-    public ResponseEntity<Void> resetPassword(@Valid @RequestBody PasswordResetRequest request) {
-        authService.resetPassword(request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> requestPasswordReset(@Valid @RequestBody PasswordResetRequest request) {
+        authService.requestPasswordReset(request);
+        return ResponseEntity.ok("Password reset email sent");
     }
 }
