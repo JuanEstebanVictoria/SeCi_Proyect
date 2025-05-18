@@ -6,7 +6,9 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -19,8 +21,14 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
+@Data
+@ConfigurationProperties(prefix = "jwt")
 @Configuration
 public class JwtConfig {
+    private String secret;
+    private long expirationMs;
+    private long refreshExpirationMs;
+
     @Value("${jwt.public.key}")
     private RSAPublicKey publicKey;
 
