@@ -1,12 +1,15 @@
 package co.edu.uniquindio.seci_proyect.services.impl;
 
 import co.edu.uniquindio.seci_proyect.Model.User;
+import co.edu.uniquindio.seci_proyect.Model.UserStatus;
 import co.edu.uniquindio.seci_proyect.dtos.auth.*;
 import co.edu.uniquindio.seci_proyect.dtos.user.PasswordResetRequest;
 import co.edu.uniquindio.seci_proyect.dtos.user.UserResponse;
 import co.edu.uniquindio.seci_proyect.exceptions.*;
+import co.edu.uniquindio.seci_proyect.repositories.UserRepository;
 import co.edu.uniquindio.seci_proyect.security.*;
 import co.edu.uniquindio.seci_proyect.services.interfaces.AuthService;
+import co.edu.uniquindio.seci_proyect.services.interfaces.EmailService;
 import co.edu.uniquindio.seci_proyect.services.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +17,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,9 +25,55 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    private AuthenticationManager authenticationManager;
-    private JwtTokenProvider tokenProvider;
-    private UserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider tokenProvider;
+    private final UserService userService;
+    private final UserRepository userRepository;
+    private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public LoginResponse register(RegisterRequest request) {
+        // 1. Validar si el email ya existe
+        if (userRepository.findByEmail(request.email()).isPresent()) {
+            throw new BusinessRuleException("El correo ya está registrado");
+        }
+
+        // 2. Crear un nuevo usuario con los datos del request
+        User newUser = new User();
+        newUser.setEmail(request.email());
+        newUser.setPassword(passwordEncoder.encode(request.password()));
+        newUser.setFullName(request.nombre()); // Ajusta según campos que tengas en RegisterRequest y User
+        newUser.setRol(request.rol());           // Asegúrate que rol viene en el request o asigna uno por defecto
+        newUser.setStatus(UserStatus.ACTIVE);    // Ejemplo, ajusta según tu enum y lógica
+
+        // Guardar usuario en la base de datos
+        userRepository.save(newUser);
+
+        // 3. Autenticar al usuario recién creado para generar tokens
+        try {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.email(),
+                        request.password()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // 4. Obtener datos para la respuesta
+        UserResponse userResponse = userService.getUserByEmail(request.email());
+
+        String jwt = tokenProvider.generateToken(authentication);
+        String refreshToken = tokenProvider.generateRefreshToken(authentication);
+
+        // 5. Retornar LoginResponse con los tokens y datos del usuario
+        return new LoginResponse(jwt, refreshToken, userResponse);
+        } catch (BadCredentialsException e) {
+            throw new AuthenticationException("Credenciales inválidas");
+        }
+    }
+
 
     @Override
     public LoginResponse login(LoginRequest request) {
@@ -46,7 +96,6 @@ public class AuthServiceImpl implements AuthService {
             throw new AuthenticationException("Credenciales inválidas");
         }
     }
-
     @Override
     public LoginResponse refreshToken(RefreshTokenRequest request) {
         if (!tokenProvider.validateToken(request.refreshToken())) {

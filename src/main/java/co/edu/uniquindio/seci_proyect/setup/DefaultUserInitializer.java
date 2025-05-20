@@ -1,7 +1,5 @@
 package co.edu.uniquindio.seci_proyect.setup;
 
-
-
 import co.edu.uniquindio.seci_proyect.Model.User;
 import co.edu.uniquindio.seci_proyect.Model.UserStatus;
 import co.edu.uniquindio.seci_proyect.repositories.UserRepository;
@@ -30,15 +28,18 @@ public class DefaultUserInitializer implements CommandLineRunner {
     }
 
     private User createUser(DefaultUserProperties.DefaultUser defaultUser) {
-        return new User(
-                UUID.randomUUID().toString(),
-                defaultUser.username(),                     
-                defaultUser.username(),
-                passwordEncoder.encode(defaultUser.password()),
-                LocalDate.of(1982, 8, 27),
-                defaultUser.role(),
-                UserStatus.ACTIVE,
-                new GeoJsonPoint(0.0, 0.0)
-        );
+        User user = new User();
+        user.setId(UUID.randomUUID().toString());
+        user.setEmail(defaultUser.getEmail());
+        user.setFullName(defaultUser.getName());
+        user.setPassword(passwordEncoder.encode(defaultUser.getPassword()));
+        user.setDateBirth(defaultUser.getBirthDate());
+        user.setRol(defaultUser.getRol());
+        user.setStatus(UserStatus.ACTIVE);
+        user.setLocation(new GeoJsonPoint(
+                defaultUser.getLocation().getLongitude(),
+                defaultUser.getLocation().getLatitude()
+        ));
+        return user;
     }
 }

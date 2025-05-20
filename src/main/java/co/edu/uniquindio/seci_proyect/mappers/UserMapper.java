@@ -7,12 +7,12 @@ import co.edu.uniquindio.seci_proyect.dtos.user.UserResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
+
     @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
-    @Mapping(target = "status", constant = "REGISTERED")
-    @Mapping(target = "password", expression = "java( new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode(userDTO.password()) )")
+    @Mapping(target = "status", expression = "java(co.edu.uniquindio.seci_proyect.Model.UserStatus.REGISTERED)")
+    @Mapping(target = "password", expression = "java(new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode(userRegistrationRequest.password()))")
     User parseOf(UserRegistrationRequest userRegistrationRequest);
 
     @Mapping(source = "dateBirth", target = "dateBirth", dateFormat = "yyyy-MM-dd")

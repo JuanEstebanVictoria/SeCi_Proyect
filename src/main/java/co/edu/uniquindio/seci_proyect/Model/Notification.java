@@ -20,11 +20,15 @@ public class Notification {
     @Id
     @EqualsAndHashCode.Include
     private String id;
+
     @NotBlank
     private String message;
+
     @Past
     private LocalDateTime date;
+
     @NotNull
     private Boolean read;
+
     private  String receiverId;
 }

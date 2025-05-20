@@ -21,7 +21,7 @@ public class UserController {
 
     private UserService userService;
 
-    @PostMapping
+    @PostMapping("/users/create")
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRegistrationRequest request) {
         var response = userService.createUser(request);
         URI location = ServletUriComponentsBuilder
@@ -42,8 +42,4 @@ public class UserController {
     public Page<UserResponse> searchUsers(UserSearchRequest request) {
         return userService.searchUsers(request);
     }
-
-
-
-
 }
