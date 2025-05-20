@@ -30,7 +30,6 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     Optional<User> findByActivationCode(String activationCode);
     Optional<User> findByResetPasswordCode(String resetPasswordCode);
-   // Optional<User> findUserByEmailNot(String email);
 
     @Query(value =  "{ 'status': { $ne: 'DELETED' }, " +
             "  'fullName': { $regex: ?0, $options: 'i' }, " +

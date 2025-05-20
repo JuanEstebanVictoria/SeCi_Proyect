@@ -51,6 +51,16 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
+    public void sendEmail(String to, String subject, String body) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(body);
+        mailSender.send(message);
+    }
+
+    @Override
+    @Async
     public void sendReportStatusChangeNotification(String to, String reportTitle, String newStatus, String reason) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);

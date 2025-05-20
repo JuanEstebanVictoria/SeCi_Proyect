@@ -11,9 +11,8 @@ import org.mapstruct.MappingConstants;
 public interface NotificationMapper {
 
     @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
-    @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
+    @Mapping(target = "date", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "read", constant = "false")
     Notification toNotification(CreateNotificationDTO request);
-
     NotificationResponse toNotificationResponse(Notification notification);
 }

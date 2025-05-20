@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private EmailService emailService;
     private PasswordEncoder passwordEncoder;
 
+
     @Override
     public UserResponse createUser(UserRegistrationRequest user) {
         if(userRepository.findUserByEmail(user.email()).isPresent()){
@@ -130,7 +131,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void resetPassword(PasswordResetRequest request) {
-        User user = userRepository.findByResetPasswordCode(request.resetCode())
+        User user = userRepository.findByResetPasswordCode(request.code())
                 .orElseThrow(() -> new ResourceNotFoundException("Código de restablecimiento no válido"));
 
         if (user.getResetPasswordCodeExpiry().isBefore(LocalDateTime.now())) {
@@ -191,7 +192,7 @@ public class UserServiceImpl implements UserService {
     public UserResponse getUserByEmail(String email) throws ResourceNotFoundException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
-        return UserMapper.toUserResponse(user); // Asume que tienes un mapper
+        return userMapper.toUserResponse(user);
     }
 
     @Override

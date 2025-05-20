@@ -25,7 +25,8 @@ public class CategoryController {
     public List<CategoryResponse> getAll() {
         return categoryServices.findAll();
     }
-    @GetMapping
+
+    @GetMapping("/active")
     public List<CategoryResponse> getAllActive() {
         return categoryServices.findAllActive();
     }
@@ -44,11 +45,10 @@ public class CategoryController {
     public CategoryResponse findById(@PathVariable("id")String id) {
         return categoryServices.findById(id);
     }
+/**
     @GetMapping
     public ResponseEntity<List<CategoryResponse>> getAllActiveCategories() {
         List<CategoryResponse> categories = categoryServices.findAllActive();
         return ResponseEntity.ok(categories);
-    }
-
-
+    }**/
 }

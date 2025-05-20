@@ -6,12 +6,13 @@ import co.edu.uniquindio.seci_proyect.dtos.comment.CommentResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import org.bson.types.ObjectId;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CommentMapper {
 
-    @Mapping(target = "userId", expression = "java(new ObjectId(userId))")
-    @Mapping(target = "reportId", expression = "java(new ObjectId(reportId))")
+    @Mapping(target = "userId", expression = "java(new org.bson.types.ObjectId(userId))")
+    @Mapping(target = "reportId", expression = "java(new org.bson.types.ObjectId(reportId))")
     @Mapping(target = "date", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "id", ignore = true)
     Comment toComment(CommentRequest commentRequest, String reportId, String userId);

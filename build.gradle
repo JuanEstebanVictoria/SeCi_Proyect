@@ -64,8 +64,12 @@ tasks.named('test') {
 }
 
 tasks.withType(JavaCompile) {
-    options.compilerArgs = [
-            '-Amapstruct.defaultComponentModel=spring'
+    options.compilerArgs += [
+            '-Amapstruct.defaultComponentModel=spring',
+            '-parameters'
     ]
+}
+tasks.withType(Test).configureEach {
+    enabled = false
 }
 

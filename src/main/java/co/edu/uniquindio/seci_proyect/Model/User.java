@@ -12,6 +12,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import java.util.List;
 
 @Getter
 @Setter
@@ -67,7 +70,7 @@ public class User {
                 this.resetPasswordCodeExpiry.isAfter(LocalDateTime.now());
     }
 
-    public Collection<Object> getRoles() {
-        return null;
+    public Collection<GrantedAuthority> getRoles() {
+        return List.of(new SimpleGrantedAuthority(rol.toString()));
     }
 }

@@ -17,6 +17,8 @@ public interface ReportMapper {
     @Mapping(target = "comments", expression = "java(new ArrayList<>())")
     Report parseOf(ReportRequest reportRequest);
 
+    @Mapping(target = "latitude", ignore = true)
+    @Mapping(target = "longitude", ignore = true)
     ReportResponse toReportResponse(Report report);
 
 }
